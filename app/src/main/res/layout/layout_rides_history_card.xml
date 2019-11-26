@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/colorGreen">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -10,12 +11,22 @@
         android:layout_marginLeft="5dp"
         android:layout_marginTop="2.5dp"
         android:layout_marginRight="5dp"
-        android:layout_marginBottom="2.5dp">
+        android:layout_marginBottom="2.5dp"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="@color/buttoncolor">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Rides History"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:textAlignment="center"/>
 
 
             <LinearLayout
@@ -26,14 +37,17 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Date Ride Created"/>
+                    android:text="Date Ride Created"
+                    android:textStyle="bold"
+                    android:layout_margin="5dp"/>
 
                 <TextView
                     android:id="@+id/placeRideCreatedDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginStart="10dp" />
+                    android:layout_marginStart="10dp"
+                    android:layout_margin="5dp"/>
 
             </LinearLayout>
 
@@ -45,7 +59,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Pick Up"/>
+                    android:text="Pick Up"
+                    android:textStyle="bold"
+                    android:layout_margin="5dp"/>
 
                 <TextView
                     android:id="@+id/placePickupLoc"
@@ -53,6 +69,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
+                    android:layout_margin="5dp"
                     />
 
             </LinearLayout>
@@ -65,7 +82,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Drop Off"/>
+                    android:text="Drop Off"
+                    android:textStyle="bold"
+                    android:layout_margin="5dp"/>
 
                 <TextView
                     android:id="@+id/placeDropOffLoc"
@@ -73,6 +92,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
+                    android:layout_margin="5dp"
                     />
 
             </LinearLayout>
@@ -85,7 +105,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Ride Status"/>
+                    android:text="Ride Status"
+                    android:textStyle="bold"
+                    android:layout_margin="5dp"/>
 
                 <TextView
                     android:id="@+id/placeRideStatus"
@@ -93,6 +115,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
+                    android:layout_margin="5dp"
                     />
 
             </LinearLayout>
@@ -105,7 +128,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Vehicle"/>
+                    android:text="Vehicle"
+                    android:textStyle="bold"
+                    android:layout_margin="5dp"/>
 
                 <TextView
                     android:id="@+id/placeVehicleType"
@@ -113,6 +138,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
+                    android:layout_margin="5dp"
                     />
 
             </LinearLayout>
@@ -125,7 +151,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Ride Fare"/>
+                    android:text="Ride Fare"
+                    android:textStyle="bold"
+                    android:layout_margin="5dp"/>
 
                 <TextView
                     android:id="@+id/placeRideFare"
@@ -133,6 +161,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
+                    android:layout_margin="5dp"
                     />
 
             </LinearLayout>

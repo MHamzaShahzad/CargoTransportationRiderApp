@@ -319,8 +319,7 @@ public class DrawerHomeActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home, new FragmentRidesHistory()).addToBackStack(null).commit();
 
         } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home, new ContactusFragment()).addToBackStack(null).commit();
 
         }
 

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite"
+    android:background="@color/colorGreen"
     android:padding="20dp"
     android:clickable="true"
     tools:context=".FragmentReviewRide">
@@ -16,7 +16,8 @@
             android:id="@+id/layout_ride_fare"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -45,7 +46,10 @@
             android:layout_below="@id/layout_ride_fare"
             android:layout_centerHorizontal="true"
             android:enabled="false"
-            android:text="Submit" />
+            android:text="Submit"
+            android:layout_marginTop="20sp"
+            android:background="@color/buttoncolor"
+            android:textColor="@color/darkTextColorBlack"/>
 
     </RelativeLayout>
 
