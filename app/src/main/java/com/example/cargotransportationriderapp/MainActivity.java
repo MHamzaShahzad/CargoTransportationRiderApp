@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if (user != null) {
-                    checkIfUserExistInDatabase(user.getPhoneNumber());
+                    checkIfUserExistInDatabase(user.getUid());
                 } else
                     Toast.makeText(context, "Something went wrong , please try again!", Toast.LENGTH_LONG).show();
 
@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (dataSnapshot.exists() && dataSnapshot.getValue() != null) {
 
                     try {
-                        User user = dataSnapshot.getValue(User.class);
+                        User user = dataSnapshot.child(Constants.STRING_DETAILS).getValue(User.class);
                         if (user != null)
                             if (user.getAccountStatus().equals(Constants.ACCOUNT_ACTIVE)) {
                                 startHomeActivity();
@@ -201,6 +201,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void startCreateAccountActivity() {
         Log.e(TAG, "startCreateAccountActivity: ");
         startActivity(new Intent(context, CreateNewAccountActivity.class));
+        finish();
     }
 
     public void SignOut() {

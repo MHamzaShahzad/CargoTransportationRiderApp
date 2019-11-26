@@ -132,6 +132,7 @@ public class CreateNewAccountActivity extends AppCompatActivity implements View.
         AuthUI.getInstance()
                 .signOut(context)
                 .addOnCompleteListener(task -> {
+                    startActivity(new Intent(context, MainActivity.class));
                     Log.e(TAG, "SignOut: IS_SUCCESSFUL : " + task.isSuccessful());
                 });
     }
@@ -216,11 +217,12 @@ public class CreateNewAccountActivity extends AppCompatActivity implements View.
                 new Date()
         );
 
-        MyFirebaseDatabase.USER_REFERENCE.child(userPhoneNumber.getText().toString()).setValue(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {
+        MyFirebaseDatabase.USER_REFERENCE.child(firebaseUser.getUid()).child(Constants.STRING_DETAILS).setValue(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 progressDialog.dismiss();
                 Toast.makeText(context, "Account created successfully!", Toast.LENGTH_LONG).show();
+                MyFirebaseDatabase.USER_REFERENCE.child(firebaseUser.getUid()).child(Constants.STRING_STATUSES).child(Constants.STRING_CURRENT_STATUS).setValue(Constants.STATUS_DEFAULT);
                 startHomeActivity();
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -308,7 +310,7 @@ public class CreateNewAccountActivity extends AppCompatActivity implements View.
     // Useless
 
     private void checkIfAccountAlreadyCreated() {
-        MyFirebaseDatabase.USER_REFERENCE.child(userPhoneNumber.getText().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
+        MyFirebaseDatabase.USER_REFERENCE.child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists() && dataSnapshot.getValue() != null) {
@@ -327,7 +329,7 @@ public class CreateNewAccountActivity extends AppCompatActivity implements View.
     }
 
     private void checkIfAccountAlreadyCreatedForDriver() {
-        MyFirebaseDatabase.DRIVERS_REFERENCE.child(userPhoneNumber.getText().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
+        MyFirebaseDatabase.DRIVERS_REFERENCE.child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists() && dataSnapshot.getValue() != null)

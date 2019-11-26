@@ -10,6 +10,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -42,9 +43,15 @@ dependencies {
     implementation 'com.google.android.gms:play-services-places:17.0.0'
     implementation 'com.google.maps.android:android-maps-utils:0.5+'
     implementation 'com.google.android.libraries.places:places:2.0.0'
+    implementation 'com.google.maps:google-maps-services:0.1.20'
+
 
     implementation 'de.hdodenhof:circleimageview:3.0.1'
     implementation 'com.android.support:multidex:1.0.3'
+    //picasso for images
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    //advance circular image
+    implementation 'com.mikhaellopez:circularimageview:4.0.2'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'

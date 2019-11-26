@@ -16,7 +16,10 @@ import android.view.ViewGroup;
 
 import com.example.cargotransportationriderapp.adapters.AdapterRidesHistory;
 import com.example.cargotransportationriderapp.controllers.MyFirebaseDatabase;
+import com.example.cargotransportationriderapp.models.RideDetails;
 import com.example.cargotransportationriderapp.models.RidesHistory;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -37,7 +40,10 @@ public class FragmentRidesHistory extends Fragment implements SwipeRefreshLayout
     private RecyclerView ridesHistoryRecyclerView;
     private AdapterRidesHistory adapterRidesHistory;
 
-    private List<RidesHistory> ridesHistoryList;
+    private List<RideDetails> ridesHistoryList;
+    private ValueEventListener ridesValueEventListener;
+
+    private FirebaseUser firebaseUser;
 
     public FragmentRidesHistory() {
         // Required empty public constructor
@@ -48,6 +54,7 @@ public class FragmentRidesHistory extends Fragment implements SwipeRefreshLayout
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         context = container.getContext();
         // Inflate the layout for this fragment
         if (view == null) {
@@ -56,7 +63,6 @@ public class FragmentRidesHistory extends Fragment implements SwipeRefreshLayout
             ridesHistoryRecyclerView = view.findViewById(R.id.rides_history_recycler_view);
             ridesHistoryRecyclerView.setHasFixedSize(true);
             ridesHistoryRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-
             adapterRidesHistory = new AdapterRidesHistory(context, ridesHistoryList);
             ridesHistoryRecyclerView.setAdapter(adapterRidesHistory);
 
@@ -72,7 +78,7 @@ public class FragmentRidesHistory extends Fragment implements SwipeRefreshLayout
         loadRidesHistoryRecyclerViewData();
     }
 
-    private void initSwipeRefreshLayout(){
+    private void initSwipeRefreshLayout() {
         // SwipeRefreshLayout
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -101,15 +107,39 @@ public class FragmentRidesHistory extends Fragment implements SwipeRefreshLayout
 
         // Showing refresh animation before making http call
         mSwipeRefreshLayout.setRefreshing(true);
-
-        MyFirebaseDatabase.RIDES_REFERENCE.addListenerForSingleValueEvent(new ValueEventListener() {
+        removeRidesValueEventListener();
+        ridesValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // Stopping swipe refresh
                 mSwipeRefreshLayout.setRefreshing(false);
 
+                ridesHistoryList.clear();
+                if (dataSnapshot.exists() && dataSnapshot.getValue() != null) {
+
+                    try {
+
+                        Iterable<DataSnapshot> snapshots = dataSnapshot.getChildren();
+                        for (DataSnapshot snapshot : snapshots) {
+                            try {
+
+                                RideDetails rideDetails = snapshot.getValue(RideDetails.class);
+                                if (rideDetails != null)
+                                    if (rideDetails.getUserId().equals(firebaseUser.getUid()))
+                                        ridesHistoryList.add(rideDetails);
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
 
 
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                adapterRidesHistory.notifyDataSetChanged();
             }
 
             @Override
@@ -117,8 +147,21 @@ public class FragmentRidesHistory extends Fragment implements SwipeRefreshLayout
                 // Stopping swipe refresh
                 mSwipeRefreshLayout.setRefreshing(false);
             }
-        });
+        };
+        MyFirebaseDatabase.RIDES_REFERENCE.addListenerForSingleValueEvent(ridesValueEventListener);
 
     }
 
+    private void removeRidesValueEventListener() {
+
+        if (ridesValueEventListener != null)
+            MyFirebaseDatabase.RIDES_REFERENCE.removeEventListener(ridesValueEventListener);
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        removeRidesValueEventListener();
+    }
 }

@@ -4,11 +4,14 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.cargotransportationriderapp.CommonFunctionsClass;
 import com.example.cargotransportationriderapp.R;
+import com.example.cargotransportationriderapp.models.RideDetails;
 import com.example.cargotransportationriderapp.models.RidesHistory;
 
 import java.util.List;
@@ -16,9 +19,9 @@ import java.util.List;
 public class AdapterRidesHistory extends RecyclerView.Adapter<AdapterRidesHistory.Holder> {
 
     Context context;
-    List<RidesHistory> list;
+    List<RideDetails> list;
 
-    public AdapterRidesHistory(Context context, List<RidesHistory> list) {
+    public AdapterRidesHistory(Context context, List<RideDetails> list) {
         this.context = context;
         this.list = list;
     }
@@ -33,16 +36,36 @@ public class AdapterRidesHistory extends RecyclerView.Adapter<AdapterRidesHistor
     @Override
     public void onBindViewHolder(@NonNull AdapterRidesHistory.Holder holder, int position) {
 
+        final RideDetails rideDetails = list.get(holder.getAdapterPosition());
+        holder.placeRideCreatedDate.setText(rideDetails.getRideCreatedDate());
+        holder.placePickupLoc.setText(rideDetails.getPickUpAddress());
+        holder.placeDropOffLoc.setText(rideDetails.getDropOffAddress());
+        holder.placeRideStatus.setText(CommonFunctionsClass.getRideStringStatus(rideDetails.getRideStatus()));
+        holder.placeVehicleType.setText(CommonFunctionsClass.stringVehicleName(rideDetails.getVehicle()));
+        holder.placeRideFare.setText(rideDetails.getCollectedRideFare());
+
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return list.size();
     }
 
     public class Holder extends RecyclerView.ViewHolder {
+
+        private TextView placeRideCreatedDate, placePickupLoc, placeDropOffLoc, placeRideStatus,
+                placeVehicleType, placeRideFare;
+
         public Holder(@NonNull View itemView) {
             super(itemView);
+
+            placeRideCreatedDate = itemView.findViewById(R.id.placeRideCreatedDate);
+            placePickupLoc = itemView.findViewById(R.id.placePickupLoc);
+            placeDropOffLoc = itemView.findViewById(R.id.placeDropOffLoc);
+            placeRideStatus = itemView.findViewById(R.id.placeRideStatus);
+            placeVehicleType = itemView.findViewById(R.id.placeVehicleType);
+            placeRideFare = itemView.findViewById(R.id.placeRideFare);
+
         }
     }
 }

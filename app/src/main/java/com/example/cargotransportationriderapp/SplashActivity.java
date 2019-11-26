@@ -38,7 +38,7 @@ public class SplashActivity extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             Log.e(TAG, "onStart: USER_EXISTS");
-            checkIfUserExistInDatabaseOnStart(user.getPhoneNumber());
+            checkIfUserExistInDatabaseOnStart(user.getUid());
         }else
             startMainActivity();
     }
@@ -51,7 +51,7 @@ public class SplashActivity extends AppCompatActivity {
                 if (dataSnapshot.exists() && dataSnapshot.getValue() != null) {
 
                     try {
-                        User user = dataSnapshot.getValue(User.class);
+                        User user = dataSnapshot.child(Constants.STRING_DETAILS).getValue(User.class);
                         if (user != null)
                             if (user.getAccountStatus().equals(Constants.ACCOUNT_ACTIVE)) {
                                 startHomeActivity();
