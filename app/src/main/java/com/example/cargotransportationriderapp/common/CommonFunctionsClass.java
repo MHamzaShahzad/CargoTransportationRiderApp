@@ -1,12 +1,19 @@
 package com.example.cargotransportationriderapp.common;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.net.Uri;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 
 public class CommonFunctionsClass {
 
@@ -88,5 +95,51 @@ public class CommonFunctionsClass {
                 return "";
         }
     }
+
+    public static boolean CheckGooglePlayServices(Context context) {
+        GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
+        int result = googleAPI.isGooglePlayServicesAvailable(context);
+        if (result != ConnectionResult.SUCCESS) {
+            if (googleAPI.isUserResolvableError(result)) {
+                try {
+                    googleAPI.getErrorDialog((Activity) context, result,
+                            0).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            return false;
+        }
+        return true;
+    }
+
+    public static void requestLocationPermissions(Context context, int requestCode) {
+        ActivityCompat.requestPermissions(
+                ((Activity) context),
+                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
+                requestCode
+        );
+    }
+
+    public static boolean checkPermissions(Context context) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isLocationEnabled(Context context) {
+        try {
+            LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+            return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+                    LocationManager.NETWORK_PROVIDER
+            );
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 
 }
