@@ -1,4 +1,4 @@
-package com.example.cargotransportationriderapp;
+package com.example.cargotransportationriderapp.common;
 
 import android.app.Activity;
 import android.content.Context;

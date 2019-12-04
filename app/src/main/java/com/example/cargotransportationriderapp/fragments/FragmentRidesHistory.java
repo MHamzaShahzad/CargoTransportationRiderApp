@@ -1,6 +1,7 @@
-package com.example.cargotransportationriderapp;
+package com.example.cargotransportationriderapp.fragments;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -14,10 +15,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.cargotransportationriderapp.R;
 import com.example.cargotransportationriderapp.adapters.AdapterRidesHistory;
 import com.example.cargotransportationriderapp.controllers.MyFirebaseDatabase;
+import com.example.cargotransportationriderapp.interfaces.FragmentInteractionListenerInterface;
 import com.example.cargotransportationriderapp.models.RideDetails;
-import com.example.cargotransportationriderapp.models.RidesHistory;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -44,6 +46,8 @@ public class FragmentRidesHistory extends Fragment implements SwipeRefreshLayout
     private ValueEventListener ridesValueEventListener;
 
     private FirebaseUser firebaseUser;
+    private FragmentInteractionListenerInterface mListener;
+
 
     public FragmentRidesHistory() {
         // Required empty public constructor
@@ -54,6 +58,8 @@ public class FragmentRidesHistory extends Fragment implements SwipeRefreshLayout
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if (mListener != null)
+            mListener.onFragmentInteraction(FragmentRidesHistory.this.getTag());
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         context = container.getContext();
         // Inflate the layout for this fragment
@@ -163,5 +169,29 @@ public class FragmentRidesHistory extends Fragment implements SwipeRefreshLayout
     public void onDestroy() {
         super.onDestroy();
         removeRidesValueEventListener();
+    }
+
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mListener = (FragmentInteractionListenerInterface) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + "must implement FragmentInteractionListenerInterface.");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mListener != null)
+            mListener.onFragmentInteraction(FragmentRidesHistory.this.getTag());
     }
 }

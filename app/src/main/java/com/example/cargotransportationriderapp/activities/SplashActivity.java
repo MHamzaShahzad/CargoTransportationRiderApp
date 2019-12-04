@@ -1,4 +1,4 @@
-package com.example.cargotransportationriderapp;
+package com.example.cargotransportationriderapp.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +9,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
+import com.example.cargotransportationriderapp.R;
+import com.example.cargotransportationriderapp.common.CommonFunctionsClass;
+import com.example.cargotransportationriderapp.common.Constants;
 import com.example.cargotransportationriderapp.controllers.MyFirebaseDatabase;
 import com.example.cargotransportationriderapp.models.User;
 import com.firebase.ui.auth.AuthUI;

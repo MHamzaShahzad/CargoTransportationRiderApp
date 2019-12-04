@@ -1,10 +1,12 @@
-package com.example.cargotransportationriderapp;
+package com.example.cargotransportationriderapp.controllers;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Base64;
+
+import com.example.cargotransportationriderapp.interfaces.CallBackReceiver;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

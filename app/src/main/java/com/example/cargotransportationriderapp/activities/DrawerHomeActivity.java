@@ -1,11 +1,9 @@
-package com.example.cargotransportationriderapp;
+package com.example.cargotransportationriderapp.activities;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
@@ -13,8 +11,15 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 
+import com.example.cargotransportationriderapp.fragments.ContactUsFragment;
+import com.example.cargotransportationriderapp.fragments.FragmentReviewRide;
+import com.example.cargotransportationriderapp.fragments.FragmentRidesHistory;
+import com.example.cargotransportationriderapp.R;
+import com.example.cargotransportationriderapp.common.CommonFunctionsClass;
+import com.example.cargotransportationriderapp.common.Constants;
 import com.example.cargotransportationriderapp.controllers.MyFirebaseDatabase;
 import com.example.cargotransportationriderapp.controllers.PrefLocalStorage;
+import com.example.cargotransportationriderapp.interfaces.FragmentInteractionListenerInterface;
 import com.example.cargotransportationriderapp.models.CurrentRideModel;
 import com.example.cargotransportationriderapp.models.Driver;
 import com.example.cargotransportationriderapp.models.DriverStatuses;
@@ -30,16 +35,12 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -74,7 +75,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.maps.DirectionsApi;
@@ -122,12 +122,12 @@ import java.util.concurrent.TimeUnit;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
-import static com.example.cargotransportationriderapp.CustomNotificationGenerator.getNextNotifId;
+import static com.example.cargotransportationriderapp.controllers.CustomNotificationGenerator.getNextNotifId;
 
 public class DrawerHomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        LocationListener, View.OnClickListener {
+        LocationListener, View.OnClickListener, FragmentInteractionListenerInterface {
 
     private static final String TAG = DrawerHomeActivity.class.getName();
     private Context context;
@@ -178,8 +178,10 @@ public class DrawerHomeActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer_home);
         context = this;
+
         localStorage = PrefLocalStorage.getInstance(context);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
         if (firebaseUser == null) {
             SignOut();
         }
@@ -188,6 +190,8 @@ public class DrawerHomeActivity extends AppCompatActivity
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle(Constants.TITLE_HOME);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -280,6 +284,9 @@ public class DrawerHomeActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+            if (getSupportFragmentManager().getBackStackEntryCount() == 0)
+                if (getSupportActionBar() != null)
+                    getSupportActionBar().setTitle(Constants.TITLE_HOME);
         }
     }
 
@@ -316,11 +323,10 @@ public class DrawerHomeActivity extends AppCompatActivity
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
 
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home, new FragmentRidesHistory()).addToBackStack(null).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home, new FragmentRidesHistory(), Constants.TITLE_RIDES_HISTORY).addToBackStack(Constants.TITLE_RIDES_HISTORY).commit();
 
         } else if (id == R.id.nav_share) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home, new ContactusFragment()).addToBackStack(null).commit();
-
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home, ContactUsFragment.newInstance(), Constants.TITLE_CONTACT_US).addToBackStack(Constants.TITLE_CONTACT_US).commit();
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -807,6 +813,7 @@ public class DrawerHomeActivity extends AppCompatActivity
     private void sendRequestToDrivers(final List<String> driversToSendRequestList, final CurrentRideModel model) {
         Log.e(TAG, "sendRequestToAdmins: ");
         progressDialog.setTitle("Sending Request...");
+        progressDialog.show();
 
         updateMyStatus(Constants.STATUS_SENDING_RIDE);
 
@@ -816,6 +823,7 @@ public class DrawerHomeActivity extends AppCompatActivity
             public void run() {
 
                 if (driversToSendRequestList.size() > 0) {
+
 
                     if (OLD_KEY != null) {
                         updateDriverStatus(OLD_KEY, Constants.STATUS_DEFAULT);
@@ -845,7 +853,7 @@ public class DrawerHomeActivity extends AppCompatActivity
                                             cancelTimer(sendRequestToSelectedAdminsTimer);
                                             cancelTimer(checkIfMyStatusChangesTimer);
                                             progressDialog.dismiss();
-                                            finish();
+                                            //finish();
 
 
                                             Log.e(TAG, "onDataChange: " + OLD_KEY);
@@ -891,7 +899,7 @@ public class DrawerHomeActivity extends AppCompatActivity
             }
         };
 
-        sendRequestToSelectedAdminsTimer.scheduleAtFixedRate(sendRequestToSelectedAdminsTask, 0, 10000);
+        sendRequestToSelectedAdminsTimer.scheduleAtFixedRate(sendRequestToSelectedAdminsTask, 0, 20000);
 
     }
 
@@ -919,9 +927,9 @@ public class DrawerHomeActivity extends AppCompatActivity
                                 getSupportFragmentManager().beginTransaction().replace(android.R.id.content, fragmentReviewRide).commit();
 
                             } else {
-                                getBookingDetails(model.getDriverId(), model.getRideId());
                                 initBookedDriverLocations(model.getDriverId());
                             }
+                            getBookingDetails(model.getDriverId(), model.getRideId());
 
                             localStorage.saveRideCredentials(model.getDriverId(), model.getRideId());
                             updateRideInstance(model.getRideId(), Constants.STRING_RIDE_STATUS, rideCurrentStatus);
@@ -941,7 +949,6 @@ public class DrawerHomeActivity extends AppCompatActivity
             }
         });
     }
-
 
     private void getBookingDetails(final String driverId, String rideId) {
         MyFirebaseDatabase.DRIVERS_REFERENCE.child(driverId).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -1406,8 +1413,8 @@ public class DrawerHomeActivity extends AppCompatActivity
                             break;
                         case Constants.STATUS_RIDE_REVIEWED:
 
-                            removeSelfCurrentRideCredentials();
                             updateMyStatus(Constants.STATUS_DEFAULT);
+                            removeSelfCurrentRideCredentials();
 
                             break;
                         default:
@@ -1609,6 +1616,12 @@ public class DrawerHomeActivity extends AppCompatActivity
                 allDriversLocationTimerTask = null;
             }
         }
+    }
+
+    @Override
+    public void onFragmentInteraction(String title) {
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle(title);
     }
 
 }

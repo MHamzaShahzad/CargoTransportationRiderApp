@@ -10,7 +10,6 @@
     app:behavior_hideable="false"
     app:behavior_peekHeight="90dp"
     android:visibility="gone"
-
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <TextView

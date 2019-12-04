@@ -1,4 +1,4 @@
-package com.example.cargotransportationriderapp;
+package com.example.cargotransportationriderapp.fragments;
 
 
 import android.app.Activity;
@@ -13,13 +13,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 
+import com.example.cargotransportationriderapp.R;
+import com.example.cargotransportationriderapp.activities.DrawerHomeActivity;
+import com.example.cargotransportationriderapp.common.Constants;
 import com.example.cargotransportationriderapp.controllers.MyFirebaseDatabase;
-import com.example.cargotransportationriderapp.models.Driver;
 import com.example.cargotransportationriderapp.models.RideDetails;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -95,9 +94,6 @@ public class FragmentReviewRide extends Fragment {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
-
                 updateMyStatus(uId, Constants.STATUS_RIDE_REVIEWED);
                 updateDriverStatus(driverId, Constants.STATUS_RIDE_REVIEWED);
                 updateRideStatus(rideId, Constants.STATUS_RIDE_REVIEWED);

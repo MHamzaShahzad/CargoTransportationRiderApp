@@ -9,10 +9,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.cargotransportationriderapp.CommonFunctionsClass;
+import com.example.cargotransportationriderapp.common.CommonFunctionsClass;
 import com.example.cargotransportationriderapp.R;
 import com.example.cargotransportationriderapp.models.RideDetails;
-import com.example.cargotransportationriderapp.models.RidesHistory;
 
 import java.util.List;
 

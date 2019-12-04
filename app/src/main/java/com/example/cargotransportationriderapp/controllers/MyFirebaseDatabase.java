@@ -1,6 +1,6 @@
 package com.example.cargotransportationriderapp.controllers;
 
-import com.example.cargotransportationriderapp.Constants;
+import com.example.cargotransportationriderapp.common.Constants;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 

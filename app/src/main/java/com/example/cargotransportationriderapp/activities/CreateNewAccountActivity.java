@@ -1,9 +1,8 @@
-package com.example.cargotransportationriderapp;
+package com.example.cargotransportationriderapp.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -14,17 +13,18 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.cargotransportationriderapp.R;
+import com.example.cargotransportationriderapp.common.CommonFunctionsClass;
+import com.example.cargotransportationriderapp.common.Constants;
 import com.example.cargotransportationriderapp.controllers.MyFirebaseDatabase;
 import com.example.cargotransportationriderapp.controllers.MyFirebaseStorage;
 import com.example.cargotransportationriderapp.models.User;
 import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -39,7 +39,6 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.UUID;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
